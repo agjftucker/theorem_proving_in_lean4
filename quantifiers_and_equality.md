@@ -487,7 +487,7 @@ example (x y : Nat) : (x + y) * (x + y) = x * x + y * x + x * y + y * y :=
   by rw [Nat.mul_add, Nat.add_mul, Nat.add_mul, ←Nat.add_assoc]
 
 example (x y : Nat) : (x + y) * (x + y) = x * x + y * x + x * y + y * y :=
-  by simp [Nat.mul_add, Nat.add_mul, Nat.add_assoc, Nat.add_left_comm]
+  by simp [Nat.mul_add, Nat.add_mul, Nat.add_assoc]
 ```
 
 The Existential Quantifier
@@ -748,25 +748,22 @@ example : (∃ x, p x ∨ q x) ↔ (∃ x, p x) ∨ (∃ x, q x) :=
         (fun ⟨a, hpa⟩ => ⟨a, (Or.inl hpa)⟩)
         (fun ⟨a, hqa⟩ => ⟨a, (Or.inr hqa)⟩))
 
-example : (∃ x, p x → r) ↔ (∀ x, p x) → r :=
+example (a : α) : (∃ x, p x → r) ↔ (∀ x, p x) → r :=
   Iff.intro
     (fun ⟨b, (hb : p b → r)⟩ =>
-     fun h2 : ∀ x, p x =>
-     show r from  hb (h2 b))
+      fun h2 : ∀ x, p x =>
+        show r from  hb (h2 b))
     (fun h1 : (∀ x, p x) → r =>
-     show ∃ x, p x → r from
-       byCases
-         (fun hap : ∀ x, p x => ⟨a, λ h' => h1 hap⟩)
-         (fun hnap : ¬ ∀ x, p x =>
-          byContradiction
-            (fun hnex : ¬ ∃ x, p x → r =>
-              have hap : ∀ x, p x :=
-                fun x =>
-                byContradiction
-                  (fun hnp : ¬ p x =>
-                    have hex : ∃ x, p x → r := ⟨x, (fun hp => absurd hp hnp)⟩
-                    show False from hnex hex)
-              show False from hnap hap)))
+      show ∃ x, p x → r from
+        byContradiction
+          (fun hnex : ¬ ∃ x, p x → r =>
+            have hap : ∀ x, p x :=
+              fun x =>
+              byContradiction
+                (fun hnp : ¬ p x =>
+                  have hex : ∃ x, p x → r := ⟨x, (fun hp => absurd hp hnp)⟩
+                  show False from hnex hex)
+            show False from hnex ⟨a, λ h' => h1 hap⟩))
 ```
 
 More on the Proof Language
