@@ -748,7 +748,7 @@ example : (∃ x, p x ∨ q x) ↔ (∃ x, p x) ∨ (∃ x, q x) :=
         (fun ⟨a, hpa⟩ => ⟨a, (Or.inl hpa)⟩)
         (fun ⟨a, hqa⟩ => ⟨a, (Or.inr hqa)⟩))
 
-example (a : α) : (∃ x, p x → r) ↔ (∀ x, p x) → r :=
+example : (∃ x, p x → r) ↔ (∀ x, p x) → r :=
   Iff.intro
     (fun ⟨b, (hb : p b → r)⟩ =>
       fun h2 : ∀ x, p x =>
